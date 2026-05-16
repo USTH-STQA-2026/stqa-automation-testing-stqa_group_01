@@ -27,6 +27,9 @@ Sử dụng **Playwright + Python** để kiểm thử hệ thống Mượn sác
 | 2   |2410481|Nguyễn Đăng Khôi| Thành viên  |
 | 3   |       |                | Thành viên  |
 | 4   |       |                | Thành viên  |
+| 5   |2410003|Huỳnh Gia An    | Thành viên  |
+| 6   |       |                | Thành viên  |
+
 
 ---
 
