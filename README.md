@@ -28,7 +28,7 @@ Sử dụng **Playwright + Python** để kiểm thử hệ thống Mượn sác
 | 3   |       |                | Thành viên  |
 | 4   |       |                | Thành viên  |
 | 5   |2410003|Huỳnh Gia An    | Thành viên  |
-| 6   |       |                | Thành viên  |
+| 6   |2410148|Cao Chí Bảo     | Thành viên  |
 
 
 ---
