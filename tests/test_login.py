@@ -108,12 +108,12 @@ def test_login_fail_wrong_password(page, test_config):
     sem_text = " ".join(page.locator("flt-semantics").all_text_contents())
 
     # No transition -> No "Logout" button should appear
-    assert "Đăng xuất" not in sem_text or "Logout" not in sem_text, \
+    assert "Đăng xuất" not in sem_text and "Logout" not in sem_text, \
         "Fault: System logged in despite using an incorrect password!"
         
     # Ensure the login elements are still visible on screen. 
     # There might be a case where the app crashses after we input the wrong password.
-    assert "Đăng nhập" or "Sign in" in sem_text, \
+    assert "Đăng nhập" in sem_text or "Sign in" in sem_text, \
         "Fault: User left the login page but didn't log in correctly."
     
     # Correct error message must be displayed
@@ -157,12 +157,12 @@ def test_login_fail_empty_fields(page, test_config):
     sem_text = " ".join(page.locator("flt-semantics").all_text_contents())
 
     # No transition -> No "Logout" button should appear
-    assert "Đăng xuất" not in sem_text or "Logout" not in sem_text, \
+    assert "Đăng xuất" not in sem_text and "Logout" not in sem_text, \
         "Fault: System logged in despite no email and password were entered!"
         
     # Ensure the login elements are still visible on screen. 
     # There might be a case where the app crashses after we input the wrong password.
-    assert "Đăng nhập" or "Sign in" in sem_text, \
+    assert "Đăng nhập" in sem_text or "Sign in" in sem_text, \
         "Fault: User left the login page but didn't log in correctly."
     
     # Correct error message must be displayed
@@ -192,12 +192,12 @@ def test_login_fail_member_not_found(page, test_config):
     sem_text = " ".join(page.locator("flt-semantics").all_text_contents())
 
     # No transition -> No "Logout" button should appear
-    assert "Đăng xuất" not in sem_text or "Logout" not in sem_text, \
+    assert "Đăng xuất" not in sem_text and "Logout" not in sem_text, \
         "Fault: System logged in despite no email and password were entered!"
         
     # Ensure the login elements are still visible on screen. 
     # There might be a case where the app crashses after we input the wrong password.
-    assert "Đăng nhập" or "Sign in" in sem_text, \
+    assert "Đăng nhập" in sem_text or "Sign in" in sem_text, \
         "Fault: User left the login page but didn't log in correctly."
     
     # Correct error message must be displayed
