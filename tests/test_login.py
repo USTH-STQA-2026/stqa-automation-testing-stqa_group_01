@@ -90,7 +90,37 @@ def test_login_fail_wrong_password(page, test_config):
            (*Assert: URL vẫn ở trang đăng nhập HOẶC có thông báo lỗi*)
     """
     # TODO: Students implement here (Sinh viên viết code ở đây)
-    pytest.skip("Not implemented — student must complete (Chưa hoàn thành)")
+    # pytest.skip("Not implemented — student must complete (Chưa hoàn thành)")
+    # [R] Reachability: Go to the login page
+    page.goto(test_config["base_url"], wait_until="networkidle", timeout=60000)
+    enable_flutter_semantics(page)
+
+    # [I] Infection: Enter the wrong password
+    flutter_fill(page, "Email", test_config["email"])
+    flutter_fill(page, "Mật khẩu", "wrongPassword")
+    flutter_click_button(page, "Đăng nhập")
+
+    # [P] Propagation: Wait for the application to process the request and update error message.
+    # The website should not make a transition because we are expecting an error message.
+    wait_for_flutter(page, text="Mật khẩu không đúng.")
+
+    # [R✓] Revealability: Test Oracle checks that we are still in the login page
+    sem_text = " ".join(page.locator("flt-semantics").all_text_contents())
+
+    # No transition -> No "Logout" button should appear
+    assert "Đăng xuất" not in sem_text or "Logout" not in sem_text, \
+        "Fault: System logged in despite using an incorrect password!"
+        
+    # Ensure the login elements are still visible on screen. 
+    # There might be a case where the app crashses after we input the wrong password.
+    assert "Đăng nhập" or "Sign in" in sem_text, \
+        "Fault: User left the login page but didn't log in correctly."
+    
+    # Correct error message must be displayed
+    assert "Mật khẩu không đúng." in sem_text, \
+        "Fault: Wrong error message displayed. Expecting \"Mật khẩu không đúng.\" "
+
+    page.screenshot(path=os.path.join(SCREENSHOT_DIR, "login_fail_wrong_password.png"))
 
 
 def test_login_fail_empty_fields(page, test_config):
@@ -111,4 +141,67 @@ def test_login_fail_empty_fields(page, test_config):
         4. Assert: URL still on login page (*Assert: URL vẫn ở trang đăng nhập*)
     """
     # TODO: Students implement here (Sinh viên viết code ở đây)
-    pytest.skip("Not implemented — student must complete (Chưa hoàn thành)")
+    # pytest.skip("Not implemented — student must complete (Chưa hoàn thành)")
+    # [R] Reachability: Go to the login page
+    page.goto(test_config["base_url"], wait_until="networkidle", timeout=60000)
+    enable_flutter_semantics(page)
+
+    # [I] Infection: The email and password input are left empty
+    flutter_click_button(page, "Đăng nhập")
+
+    # [P] Propagation: Wait for the application to process the request and update error message.
+    # The website should not make a transition because we are expecting an error message.
+    wait_for_flutter(page, text="Vui lòng nhập email và mật khẩu.")
+
+    # [R✓] Revealability: Test Oracle checks that we are still in the login page
+    sem_text = " ".join(page.locator("flt-semantics").all_text_contents())
+
+    # No transition -> No "Logout" button should appear
+    assert "Đăng xuất" not in sem_text or "Logout" not in sem_text, \
+        "Fault: System logged in despite no email and password were entered!"
+        
+    # Ensure the login elements are still visible on screen. 
+    # There might be a case where the app crashses after we input the wrong password.
+    assert "Đăng nhập" or "Sign in" in sem_text, \
+        "Fault: User left the login page but didn't log in correctly."
+    
+    # Correct error message must be displayed
+    assert "Vui lòng nhập email và mật khẩu." in sem_text, \
+        "Fault: Wrong error message displayed. Expecting \"Vui lòng nhập email và mật khẩu.\" "
+
+    page.screenshot(path=os.path.join(SCREENSHOT_DIR, "login_fail_empty_fields.png"))
+
+def test_login_fail_member_not_found(page, test_config):
+    """Additional Test case: TC-13
+    Description: System rejects login for an email that doesn't exist in the system"""
+    
+    # [R] Reachability: Go to the login page
+    page.goto(test_config["base_url"], wait_until="networkidle", timeout=60000)
+    enable_flutter_semantics(page)
+
+    # [I] Infection: The wrong email is entered
+    flutter_fill(page, "Email", "random.user@email.com")
+    flutter_fill(page, "Mật khẩu", "password123")
+    flutter_click_button(page, "Đăng nhập")
+
+    # [P] Propagation: Wait for the application to process the request and update error message.
+    # The website should not make a transition because we are expecting an error message.
+    wait_for_flutter(page, text="Không tìm thấy thành viên.")
+
+    # [R✓] Revealability: Test Oracle checks that we are still in the login page
+    sem_text = " ".join(page.locator("flt-semantics").all_text_contents())
+
+    # No transition -> No "Logout" button should appear
+    assert "Đăng xuất" not in sem_text or "Logout" not in sem_text, \
+        "Fault: System logged in despite no email and password were entered!"
+        
+    # Ensure the login elements are still visible on screen. 
+    # There might be a case where the app crashses after we input the wrong password.
+    assert "Đăng nhập" or "Sign in" in sem_text, \
+        "Fault: User left the login page but didn't log in correctly."
+    
+    # Correct error message must be displayed
+    assert "Không tìm thấy thành viên." in sem_text, \
+        "Fault: Wrong error message displayed. Expecting \"Không tìm thấy thành viên.\" "
+
+    page.screenshot(path=os.path.join(SCREENSHOT_DIR, "login_fail_member_not_found.png"))
