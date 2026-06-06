@@ -84,7 +84,7 @@ def test_switch_language_to_english(page, test_config):
     # checks if there are any English words
     found_en = any(word in sem_text for word in ["Logout", "Borrow", "Search", "Library"])
     
-    assert found_en, "Lỗi: Giao diện chưa chuyển sang tiếng Anh!"
+    assert found_en, "Error: Language has not been changed to English!"
     
     # save screenshot
     page.screenshot(path=os.path.join(SCREENSHOT_DIR, "language_en.png"))
