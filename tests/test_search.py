@@ -17,20 +17,17 @@ Hints (*Gợi ý*):
 import os
 import time
 import pytest
-from conftest import (
-    enable_flutter_semantics, flutter_fill, flutter_click_button,
-    login, SCREENSHOT_DIR,
-)
+from conftest import enable_flutter_semantics, flutter_fill, flutter_click_button, wait_for_flutter, login, SCREENSHOT_DIR
 
 
-def test_search_book_by_name(page, test_config):
-    """TC-04: Search book by name – results found (*Tìm kiếm sách theo tên — tìm thấy kết quả*)
+def test_search_by_name(page, test_config):
+    """TC-04: Search by book name – type "Flutter" (*Tìm sách theo tên – nhập "Flutter"*)
 
-    🔴 NOT COMPLETED (*CHƯA HOÀN THÀNH*)
+    🟢 Done
 
     Description (*Mô tả*):
-        Log in → search keyword "Flutter" → verify Flutter books appear in results.
-        (*Đăng nhập → tìm kiếm từ khóa "Flutter" → kiểm tra có sách Flutter trong kết quả.*)
+        Type "Flutter" in the search box → system displays books containing "Flutter".
+        (*Nhập "Flutter" vào ô tìm kiếm → hệ thống hiển thị sách có chứa "Flutter".*)
 
     Hints (*Gợi ý*):
         - login(page, test_config)
@@ -38,24 +35,62 @@ def test_search_book_by_name(page, test_config):
         - Verify: page.locator('flt-semantics[aria-label*="Flutter"]').count() > 0
     """
     # TODO: Students implement here (Sinh viên viết code ở đây)
-    pytest.skip("Not implemented — student must complete (Chưa hoàn thành)")
+    # pytest.skip("Not implemented — student must complete (Chưa hoàn thành)")
+
+    # [R] Reachability: Login and reach the book list page with search functionality
+    login(page, test_config)
+
+    # [I] Infection: Type "Flutter" in the search box — trigger the search/filter logic
+    flutter_fill(page, "Tìm kiếm theo tên sách hoặc tác giả...", "Flutter")
+
+    # [P] Propagation: Wait for book cards containing "Flutter" to appear in the UI
+    # Note: book card titles are stored in aria-label, not textContent
+    wait_for_flutter(page, selector='flt-semantics[aria-label*="Flutter"]')
+
+    # [R✓] Revealability: Test Oracle checks the search results
+    assert page.locator('flt-semantics[aria-label*="Flutter"]').count() > 0, \
+        "Fault: No book card with 'Flutter' in aria-label found in search results."
+
+    #assert page.locator('flt-semantics[aria-label*="Lập trình Flutter cơ bản"]').count() > 0, \
+    #    "Fault: BOOK001 'Lập trình Flutter cơ bản' not found in search results."
+
+    sem_text = " ".join(page.locator("flt-semantics").all_text_contents())
+    assert "Không tìm thấy sách" not in sem_text, \
+        "Fault: System shows 'Không tìm thấy sách' even though BOOK001 exists in seed data."
+
+    page.screenshot(path=os.path.join(SCREENSHOT_DIR, "TC-04_search_by_name.png"))
 
 
-def test_search_book_no_result(page, test_config):
-    """TC-05: Search book – no results (*Tìm kiếm sách — không có kết quả*)
+def test_search_no_result(page, test_config):
+    """TC-05: Search with no results (*Tìm sách – không có kết quả*)
 
-    🔴 NOT COMPLETED (*CHƯA HOÀN THÀNH*)
+    🟢Done 
 
     Description (*Mô tả*):
-        Log in → search a non-existent keyword (e.g. "xyz_khong_ton_tai_12345")
-        → verify no books are displayed.
-        (*Đăng nhập → tìm kiếm từ khóa không tồn tại → kiểm tra không có sách nào hiển thị.*)
+        Type a keyword that does not match any book → system shows an appropriate message.
+        (*Nhập từ khóa không khớp bất kỳ sách nào → hệ thống hiển thị thông báo phù hợp.*)
 
     Hints (*Gợi ý*):
         - Verify: page.locator('flt-semantics[role="group"][aria-label*="Mã: BOOK"]').count() == 0
     """
     # TODO: Students implement here (Sinh viên viết code ở đây)
-    pytest.skip("Not implemented — student must complete (Chưa hoàn thành)")
+    # pytest.skip("Not implemented — student must complete (Chưa hoàn thành)")
+
+    # [R] Reachability: Login and reach the book list page with search functionality
+    login(page, test_config)
+
+    # [I] Infection: Type a keyword that does not exist in seed data — trigger empty search
+    flutter_fill(page, "Tìm kiếm theo tên sách hoặc tác giả...", "Tiểu thuyết")
+
+    # [P] Propagation: Wait for the empty-state message to appear in the UI
+    wait_for_flutter(page, text="Không tìm thấy sách")
+
+    # [R✓] Revealability: Test Oracle checks the empty-state message
+    sem_text = " ".join(page.locator("flt-semantics").all_text_contents())
+    assert "Không tìm thấy sách" in sem_text, \
+        "Fault: 'Không tìm thấy sách' message not shown when search returns no results."
+
+    page.screenshot(path=os.path.join(SCREENSHOT_DIR, "TC-05_search_no_result.png"))
 
 
 def test_filter_by_category(page, test_config):
