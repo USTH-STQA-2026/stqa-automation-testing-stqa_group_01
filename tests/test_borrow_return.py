@@ -21,7 +21,7 @@ import time
 import pytest
 from conftest import (
     enable_flutter_semantics, flutter_fill, flutter_click_button,
-    login, SCREENSHOT_DIR,
+    login, SCREENSHOT_DIR, wait_for_flutter
 )
 
 
@@ -49,8 +49,32 @@ def test_borrow_book(page, test_config):
         6. Assert: "Đang mượn" or "thành công" appears
            (*Assert: "Đang mượn" hoặc "thành công" xuất hiện*)
     """
-    # TODO: Students implement here (Sinh viên viết code ở đây)
-    pytest.skip("Not implemented — student must complete (Chưa hoàn thành)")
+    # TODO: Students implement here (Sinh viên viết code ở đây)  
+
+    # [R] Reachability: Access the website
+    login(page, test_config)
+    page.screenshot(path=os.path.join(SCREENSHOT_DIR, "before_borrow.png"))
+
+    # [I] Infection: Borrow a book
+    buttons = page.get_by_role("button", name="Mượn sách này")
+    if buttons.count()>0:
+        buttons.first.click()
+    else:
+        assert buttons.count() > 0, "No books to borrow"
+    
+    wait_for_flutter(page,"Xác nhận mượn sách")
+    flutter_click_button(page,"Mượn")
+    
+    # [P] Propagation: Wait for the system to process the request
+    wait_for_flutter(page,"Mượn sách thành công")
+    page.screenshot(path=os.path.join(SCREENSHOT_DIR, "after_borrow.png"))
+
+    # [R] Revealability: Test oracle check if the book has changed state
+    sem_text = " ".join(page.locator("flt-semantics").all_text_contents())
+    assert "thành công" in sem_text, \
+        f"Borrow book wasn't successful"
+
+    # pytest.skip("Not implemented — student must complete (Chưa hoàn thành)")
 
 
 def test_view_borrowed_books(page, test_config):
@@ -68,7 +92,33 @@ def test_view_borrowed_books(page, test_config):
           (*Kiểm tra: có sách với aria-label chứa "Đang mượn" hoặc có nút "Trả sách"*)
     """
     # TODO: Students implement here (Sinh viên viết code ở đây)
-    pytest.skip("Not implemented — student must complete (Chưa hoàn thành)")
+
+    # [R] Reachability : Access to the web
+    page.goto(test_config["base_url"], wait_until="networkidle", timeout=60000)
+    enable_flutter_semantics(page)
+    # [I] Infection: Enter correct data (here is entering correct data to login)
+    flutter_fill(page, "Email", test_config["email"])
+    flutter_fill(page, "Mật khẩu", test_config["password"])
+    flutter_click_button(page, "Đăng nhập")
+    # [P] Propagation : Test the view borrowed books 
+    page.locator('flt-semantics[role="tab"][aria-label="Mượn / Trả"]').first.click()
+    enable_flutter_semantics(page)
+    wait_for_flutter(page, text="Phiếu mượn của tôi")
+    page.screenshot(path=os.path.join(SCREENSHOT_DIR, "view_borrowed.png"))
+    
+    sem_text = page.content()
+    
+    #[role='group'][aria-label*='Kiểm thử phần mềm nhập môn'][aria-label*='Trả sách']
+    # assert "Đang mượn" in sem_text or "Trả sách" in sem_text, \
+    #     "Fault : Error with the display for borrowed book"
+    assert "Đang mượn" in sem_text, \
+       "Fault : No display of 'Đang mượn'!"
+    assert "Trả sách" in sem_text, \
+        "Fault : No display of 'Trả sách'!"
+    assert "Đã trả" in sem_text, \
+        "Fault : No display of 'Đã trả'" 
+
+    #pytest.skip("Not implemented — student must complete (Chưa hoàn thành)")
 
 
 def test_return_book(page, test_config):
@@ -88,4 +138,54 @@ def test_return_book(page, test_config):
           (*Click và kiểm tra sách chuyển trạng thái hoặc có thông báo thành công*)
     """
     # TODO: Students implement here (Sinh viên viết code ở đây)
+
+    # [R] Reachability: Access the website
+    page.goto(test_config["base_url"], wait_until="networkidle", timeout=60000)
+    enable_flutter_semantics(page)
+    flutter_fill(page, "Email", "ba.nguyen@email.com")
+    flutter_fill(page, "Mật khẩu", test_config["password"])
+    flutter_click_button(page, "Đăng nhập")
+ 
+    tab=page.locator('flt-semantics[role="tab"][aria-label="Mượn / Trả"]')
+    tab.click()
+
+    # [I] Infection: Return a book
+    page.screenshot(path=os.path.join(SCREENSHOT_DIR, "before_return.png"))
+    flutter_click_button(page,"Trả sách")
+
+    # [P] Propagation: Wait for the system to process the request
+    wait_for_flutter(page,"Trả sách thành công")
+    page.screenshot(path=os.path.join(SCREENSHOT_DIR, "after_return.png"))
+    
+    # [R] Revealability: Test oracle check if the borrowing slip has changed state
+    sem_text = " ".join(page.locator("flt-semantics").all_text_contents())
+    assert "thành công" in sem_text, \
+        f"Return book wasn't successful"
+
+    #pytest.skip("Not implemented — student must complete (Chưa hoàn thành)")
+
+def test_book_limit(page, test_config):
+
     pytest.skip("Not implemented — student must complete (Chưa hoàn thành)")
+
+def test_borrow_permission_expired(page, test_config):
+
+    page.goto(test_config["base_url"], wait_until="networkidle", timeout=60000)
+    enable_flutter_semantics(page)
+    flutter_fill(page, "Email", "binh.pham@email.com")
+    flutter_fill(page, "Mật khẩu", test_config["password"])
+    flutter_click_button(page, "Đăng nhập")
+    page.wait_for_timeout(2000)
+    buttons = page.get_by_role("button", name="Mượn sách này")
+    if buttons.count()>0:
+        buttons.first.click()
+    else:
+        assert buttons.count() > 0, "No books to borrow"
+    wait_for_flutter(page,"Xác nhận mượn sách")
+    flutter_click_button(page,"Mượn")
+    
+    sem_text = " ".join(page.locator("flt-semantics").all_text_contents())
+    assert "Thành viên đã hết hạn" in sem_text, \
+        f"No announcement or incorrect announcement"
+
+    #pytest.skip("Not implemented — student must complete (Chưa hoàn thành)")
