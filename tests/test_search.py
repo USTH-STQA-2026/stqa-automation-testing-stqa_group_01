@@ -114,17 +114,17 @@ def test_filter_by_category(page, test_config):
     # TODO: Students implement here (Sinh viên viết code ở đây)
     login(page, test_config)
 
-    # Nhập "Công nghệ" vào ô lọc thể loại
+    # Enter "Technology" in the category filter box.
     flutter_fill(page, "Lọc theo thể loại (VD: Công nghệ, Kinh tế...)", "Công nghệ")
     wait_for_flutter(page, text="Công nghệ")
     enable_flutter_semantics(page)
 
-    # Lấy danh sách sách
+    # Get the book list
     books = page.locator('flt-semantics[role="group"][aria-label*="Mã: BOOK"]')
     book_count = books.count()
     assert book_count > 0, "Phải có ít nhất 1 sách"
 
-    # Kiểm tra từng sách đều thuộc Công nghệ
+    # Check that each book belongs to the Technology category.
     for i in range(book_count):
         label = books.nth(i).get_attribute("aria-label") or ""
         assert "Công nghệ" in label, f"Sách không thuộc Công nghệ: {label}"
@@ -148,12 +148,12 @@ def test_search_by_author(page, test_config):
     # TODO: Students implement here (Sinh viên viết code ở đây)
     login(page, test_config)
 
-    # Nhập tên tác giả
+    # Enter author's name
     flutter_fill(page, "Tìm kiếm theo tên sách hoặc tác giả...", "Nguyễn Minh Đức")
     wait_for_flutter(page, text="Nguyễn Minh Đức")
     enable_flutter_semantics(page)
 
-    # Kiểm tra có kết quả
+    # The test results are available
     results = page.locator('flt-semantics[aria-label*="Nguyễn Minh Đức"]')
     assert results.count() > 0, "Phải tìm thấy sách của Nguyễn Minh Đức"
 
