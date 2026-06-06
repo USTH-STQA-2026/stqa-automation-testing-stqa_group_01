@@ -56,25 +56,27 @@ def test_borrow_book(page, test_config): # made by Nguyễn Xuân Dương
     page.screenshot(path=os.path.join(SCREENSHOT_DIR, "before_borrow.png"))
 
     # [I] Infection: Borrow a book
+    # Find all available books, then click the first available
     buttons = page.get_by_role("button", name="Mượn sách này")
-    if buttons.count()>0:
+    if buttons.count() > 0:
         buttons.first.click()
     else:
         assert buttons.count() > 0, "No books to borrow"
-    
+    # After clicking the borrow button, a confirmation window appears, we need to confirm borrowing
     wait_for_flutter(page,"Xác nhận mượn sách")
     flutter_click_button(page,"Mượn")
     
     # [P] Propagation: Wait for the system to process the request
+    # We are expecting an anouncement for successfully borrowing a book
     wait_for_flutter(page,"Mượn sách thành công")
     page.screenshot(path=os.path.join(SCREENSHOT_DIR, "after_borrow.png"))
 
-    # [R] Revealability: Test oracle check if the book has changed state
+    # [R] Revealability: Test oracle checks if the book has been successfully borrowed
     sem_text = " ".join(page.locator("flt-semantics").all_text_contents())
     assert "thành công" in sem_text, \
-        f"Borrow book wasn't successful"
+        "Borrow book wasn't successful"
 
-    # pytest.skip("Not implemented — student must complete (Chưa hoàn thành)")
+    #pytest.skip("Not implemented — student must complete (Chưa hoàn thành)")
 
 
 def test_view_borrowed_books(page, test_config): #made by Vũ Trần Nam Khánh
@@ -93,29 +95,26 @@ def test_view_borrowed_books(page, test_config): #made by Vũ Trần Nam Khánh
     """
     # TODO: Students implement here (Sinh viên viết code ở đây)
 
-    page.goto(test_config["base_url"], wait_until="networkidle", timeout=60000)
-    enable_flutter_semantics(page)
-    # Enter correct data (here is entering correct data to login)
-    flutter_fill(page, "Email", "ba.nguyen@email.com")
-    flutter_fill(page, "Mật khẩu", "password123")
-    flutter_click_button(page, "Đăng nhập")
-    # Test the view borrowed books 
-    page.wait_for_timeout(500)
-    page.locator('flt-semantics[role="tab"][aria-label="Mượn / Trả"]').first.click()
-    page.wait_for_timeout(1000)
-    enable_flutter_semantics(page)
-    wait_for_flutter(page, text="Phiếu mượn của tôi")
+    # [R] Reachability: Access the website
+    login(page,test_config)
     
-    sem_text = "".join(page.content()) #use .content() to also include the html contents
+    # [I] Infection: Switch tab
+    # Click on the tab which contains borrowed books
+    page.locator('flt-semantics[role="tab"][aria-label="Mượn / Trả"]').click()
 
+    # [P] Propagation: View borrowed books
+    wait_for_flutter(page, "Phiếu mượn của tôi")
+    page.screenshot(path=os.path.join(SCREENSHOT_DIR, "view_borrowed_books.png"))
+    
+    # [R] Revealability: Test oracle checks if the borrowed books can be view
+    # use .content() to also include the html contents
+    sem_text = "".join(page.content())
     assert "Đang mượn" in sem_text, \
        "Fault : No display of 'Đang mượn'!"
     assert "Trả sách" in sem_text, \
         "Fault : No display of 'Trả sách'!"
     assert "Đã trả" in sem_text, \
         "Fault : No display of 'Đã trả'" 
-    
-    page.screenshot(path=os.path.join(SCREENSHOT_DIR, "view_borrow_book_success.png"))
 
     #pytest.skip("Not implemented — student must complete (Chưa hoàn thành)")
 
@@ -138,137 +137,188 @@ def test_return_book(page, test_config): # made by Nguyễn Xuân Dương
     """
     # TODO: Students implement here (Sinh viên viết code ở đây)
 
-    page.goto(test_config["base_url"], wait_until="networkidle", timeout=60000)
-    enable_flutter_semantics(page)
-    # Enter correct data (here is entering correct data to login)
-    flutter_fill(page, "Email", "ba.nguyen@email.com")
-    flutter_fill(page, "Mật khẩu", "password123")
-    flutter_click_button(page, "Đăng nhập")
-    # Test the view borrowed books 
-    page.wait_for_timeout(500)
-    page.locator('flt-semantics[role="tab"][aria-label="Mượn / Trả"]').first.click()
-    page.wait_for_timeout(1000)
-    enable_flutter_semantics(page)
-    wait_for_flutter(page, text="Phiếu mượn của tôi")
-    
-    sem_text = "".join(page.content()) #use .content() to also include the html contents
+    # [R] Reachability: Access the website
+    login(page, test_config)
 
-    assert "Đang mượn" in sem_text, \
-       "Fault : No display of 'Đang mượn'!"
-    assert "Trả sách" in sem_text, \
-        "Fault : No display of 'Trả sách'!"
-    assert "Đã trả" in sem_text, \
-        "Fault : No display of 'Đã trả'" 
-    
-    page.screenshot(path=os.path.join(SCREENSHOT_DIR, "view_borrow_book_success.png"))
+    # [I] Infection: Return a book
+    # Click on the tab which contains borrowed books
+    page.locator('flt-semantics[role="tab"][aria-label="Mượn / Trả"]').click()
+    wait_for_flutter(page, text="Phiếu mượn của tôi")
+    page.screenshot(path=os.path.join(SCREENSHOT_DIR, "before_return.png"))
+    # Return a book
+    flutter_click_button(page, "Trả sách")
+
+    # [P] Propagation: Wait for the system to process the request
+    wait_for_flutter(page, "Trả sách thành công")
+    page.screenshot(path=os.path.join(SCREENSHOT_DIR, "after_return.png"))
+
+    # [R] Revealability: Test oracle checks if the book has been returned
+    sem_text = " ".join(page.locator("flt-semantics").all_text_contents())
+    assert "thành công" in sem_text, \
+        "Return book wasn't successful"
 
     #pytest.skip("Not implemented — student must complete (Chưa hoàn thành)")
 
-def test_book_limit(page, test_config): # made by Vũ Trần Nam Khánh
 
+def test_book_limit(page, test_config): # made by Vũ Trần Nam Khánh
+    """TC-11: Checking borrowing limit
+    
+    Description:
+
+    """
+    # [R] Reachability: Access the website
+    # Login as MEM003 due to no borrowed books in this account 
     page.goto(test_config["base_url"], wait_until="networkidle", timeout=60000)
     enable_flutter_semantics(page)
     flutter_fill(page, "Email", "dam.tran@email.com")
-    flutter_fill(page, "Mật khẩu", "password123")
+    flutter_fill(page, "Mật khẩu", test_config["password"])
     flutter_click_button(page, "Đăng nhập")
-    page.wait_for_timeout(500) 
+    wait_for_flutter(page, text="Đăng xuất")
+
+    # [I] Infection: Borrow 4 books
     '''
     The idea for this for-loop is simple. The borrow book 1, 2 and 3 will always be success (and that it will pass the `if i < 4`)
     For the fourth borrow, it will go to the `else`. The sem_text will check whether if the "Đã đạt giới hạn mượn tối đa" is displayed or not.
     '''
     for i in range(1, 5, 1):
         buttons = page.get_by_role("button", name="Mượn sách này")
-        if buttons.count()>0:
+        if buttons.count() > 0:
             buttons.first.click()
         else:
-            assert buttons > 0, "No books to borrow"
+            assert buttons.count() > 0, "No books to borrow"
         wait_for_flutter(page,"Xác nhận mượn sách")
         flutter_click_button(page,"Mượn")
-        page.wait_for_timeout(500)
-        page.screenshot(path=os.path.join(SCREENSHOT_DIR, f"borrow_number_{i}.png")) #We screenshot for each borrow attempt
+
+        # [P] Propagation: Check if the fourth book triggers the error message
+        wait_for_flutter(page, "Mượn sách thành công")
+        page.screenshot(path=os.path.join(SCREENSHOT_DIR, f"borrow_number_{i}.png")) 
+
         if i < 4:
+            # Scroll the page down to borrow books
             page.wait_for_timeout(3800)
             page.mouse.wheel(0, 30)
             page.wait_for_timeout(1000)
-        else :     #fourth book - error!1
-            page.wait_for_timeout(500)
+        else:
+            # [R] Revealability: Test oracle checks if the limit has been reached
             sem_text = " ".join(page.locator("flt-semantics").all_text_contents())
-
             assert "Đã đạt giới hạn mượn tối đa" in sem_text, \
-                "Fault : The book limit counting is false. It should < 3"
-            
-            page.screenshot(path=os.path.join(SCREENSHOT_DIR, "borrow_limit_success.png"))
-            # due to the bug that a member can borrow up to 4 books instead of 3 books in the system, this TC will always fail.
+                "Fault : The book limit counting is false. It should be < 3"
+            # Due to the bug that a member can borrow up to 4 books instead of 3 books in the system, this TC will always fail.
 
     #pytest.skip("Not implemented — student must complete (Chưa hoàn thành)")
 
-def test_borrow_permission_expired(page, test_config): # made by Nguyễn Xuân Dương
 
+def test_borrow_permission_expired(page, test_config): # made by Nguyễn Xuân Dương
+    """TC-12: Testing the borrow permission of an expired account
+    
+    Description:
+
+    """
+    # [R] Reachability: Access the website
+    # Login as the expired account MEM005
     page.goto(test_config["base_url"], wait_until="networkidle", timeout=60000)
     enable_flutter_semantics(page)
     flutter_fill(page, "Email", "binh.pham@email.com")
     flutter_fill(page, "Mật khẩu", test_config["password"])
     flutter_click_button(page, "Đăng nhập")
-    page.wait_for_timeout(1000)
+    wait_for_flutter(page, text="Đăng xuất")
+
+    # [I] Infection: Try borrowing an available book
     buttons = page.get_by_role("button", name="Mượn sách này")
-    if buttons.count()>0:
+    if buttons.count() > 0:
         buttons.first.click()
     else:
         assert buttons.count() > 0, "No books to borrow"
     wait_for_flutter(page,"Xác nhận mượn sách")
     flutter_click_button(page,"Mượn")
 
-    page.wait_for_timeout(1000)
+    # [P] Propagation: Wait for the system to process the request
+    # We are expecting an error
+    wait_for_flutter(page, "Không thể mượn sách")
+    page.screenshot(path=os.path.join(SCREENSHOT_DIR, "borrow_from_expired_acc.png"))
     
+    # [R] Revealability: Test oracle checks if the expired account can borrow a book or if the error message is correct
     sem_text = " ".join(page.locator("flt-semantics").all_text_contents())
-    assert "Thành viên đã hết hạn" in sem_text, \
+    assert "hết hạn" in sem_text, \
         f"No announcement or incorrect announcement"
 
     #pytest.skip("Not implemented — student must complete (Chưa hoàn thành)")
 
+
+def test_borrow_permission_suspended(page, test_config): # made by Nguyễn Xuân Dương
+    """TC-13: Testing the borrow permission of an expired account
+    
+    Description:
+
+    """
+    # [R] Reachability: Access the website
+    # Login as the suspended account MEM004
+    page.goto(test_config["base_url"], wait_until="networkidle", timeout=60000)
+    enable_flutter_semantics(page)
+    flutter_fill(page, "Email", "cu.le@email.com")
+    flutter_fill(page, "Mật khẩu", test_config["password"])
+    flutter_click_button(page, "Đăng nhập")
+    wait_for_flutter(page, text="Đăng xuất")
+
+    # [I] Infection: Try borrowing an available book
+    buttons = page.get_by_role("button", name="Mượn sách này")
+    if buttons.count() > 0:
+        buttons.first.click()
+    else:
+        assert buttons.count() > 0, "No books to borrow"
+    wait_for_flutter(page,"Xác nhận mượn sách")
+    flutter_click_button(page,"Mượn")
+
+    # [P] Propagation: Wait for the system to process the request
+    # We are expecting an error
+    wait_for_flutter(page, "Không thể mượn sách")
+    page.screenshot(path=os.path.join(SCREENSHOT_DIR, "borrow_from_suspended_acc.png"))
+    
+    # [R] Revealability: Test oracle checks if the suspended account can borrow a book or if the error message is correct
+    sem_text = " ".join(page.locator("flt-semantics").all_text_contents())
+    assert "tạm ngưng" in sem_text, \
+        f"No announcement or incorrect announcement"
+
+    #pytest.skip("Not implemented — student must complete (Chưa hoàn thành)")
+
+
 def test_librarian_view_borrow_overdue(page,test_config): # made by Vũ Trần Nam Khánh
+    """TC-14: Testing librarian's check overdue function
 
-    '''
-    This is another bonus TC for Group 3.
-
+    Description:
     Since for librarian account, it possess some additional functions / features that a regular account cannot.
 
     One particular goal is to check inside the "Mượn / Trả" where the librarian could press on the "Kiểm tra sách quá hạn"
     to see borrowed books are overdue or not.
-    '''
-    # Get into the webpage and login
+    """
+    # [R] Reachability: Access the website
+    # Login as the librarian account
     page.goto(test_config["base_url"], wait_until="networkidle", timeout=60000)
     enable_flutter_semantics(page)
     flutter_fill(page, "Email", "librarian@library.com")
     flutter_fill(page, "Mật khẩu", "admin123")
     flutter_click_button(page, "Đăng nhập")
-    page.wait_for_timeout(500)    
+    wait_for_flutter(page, text="Đăng xuất")   
 
+    # [I] Infection: Clicking the check overdue button
     # We switch into the tab "Mượn / Trả"
-    page.locator('flt-semantics[role="tab"][aria-label="Mượn / Trả"]').first.click()
+    page.locator('flt-semantics[role="tab"][aria-label="Mượn / Trả"]').click()
     wait_for_flutter(page, text="Kiểm tra sách quá hạn")
-
-    # Wait for the flutter renders completely
-    enable_flutter_semantics(page)  
-    page.wait_for_timeout(1000)
-
     # Click on the button that shows "Kiểm tra sách quá hạn"
     flutter_click_button(page, "Kiểm tra sách quá hạn")
 
+    # [P] Propagation: Wait for the system to process the request
     # Wait for the flutter renders completely
-    enable_flutter_semantics(page)
     page.wait_for_timeout(1000)
+    page.screenshot(path=os.path.join(SCREENSHOT_DIR, "librarian_view_borrow_overdue.png"))
 
-    sem_text = "".join(page.content()) # use .content() to also include the html contents
-                                       # if we use all_text_contents() then it will ignore the "Quá hạn"
-    
-    # Our basic asserts
+    # [R] Revealability: Test oracle checks if the borrowed books which are overdue change states
+    # Use .content() to also include the html contents
+    # If we use all_text_contents() then it will ignore the "Quá hạn"
+    sem_text = "".join(page.content()) 
     assert "Kiểm thử phần mềm nhập môn" in sem_text, \
         "Fault: Target book card disappeared from the list"
-        
     assert "Quá hạn" in sem_text, \
         "Fault: The 'Quá hạn' status badge failed to generate after running the date check"    
-
-    page.screenshot(path=os.path.join(SCREENSHOT_DIR, "librarian_view_borrow_overdue_success.png"))
 
     #pytest.skip("Not implemented — student must complete (Chưa hoàn thành)")
