@@ -96,7 +96,7 @@ def test_search_no_result(page, test_config):
 def test_filter_by_category(page, test_config):
     """TC-06: Filter books by category 'Công nghệ' (*Lọc sách theo thể loại 'Công nghệ'*)
 
-    🔴 NOT COMPLETED (*CHƯA HOÀN THÀNH*)
+    🟢Done 
 
     Description (*Mô tả*):
         Log in → enter "Công nghệ" in the category filter → verify all displayed books
@@ -122,12 +122,12 @@ def test_filter_by_category(page, test_config):
     # Get the book list
     books = page.locator('flt-semantics[role="group"][aria-label*="Mã: BOOK"]')
     book_count = books.count()
-    assert book_count > 0, "Phải có ít nhất 1 sách"
+    assert book_count > 0, "There must be at least one book."
 
     # Check that each book belongs to the Technology category.
     for i in range(book_count):
         label = books.nth(i).get_attribute("aria-label") or ""
-        assert "Công nghệ" in label, f"Sách không thuộc Công nghệ: {label}"
+        assert "Công nghệ" in label, f"This book is not related to Technology: {label}"
 
     page.screenshot(path=f"{test_config['screenshot_dir']}/TC-06-filter-category.png")
 
@@ -135,7 +135,7 @@ def test_filter_by_category(page, test_config):
 def test_search_by_author(page, test_config):
     """TC-07: Search book by author name (*Tìm kiếm sách theo tên tác giả*)
 
-    🔴 NOT COMPLETED (*CHƯA HOÀN THÀNH*)
+    🟢Done 
 
     Description (*Mô tả*):
         Log in → search author name (e.g. "Nguyễn Minh Đức") → verify results found.
@@ -155,6 +155,6 @@ def test_search_by_author(page, test_config):
 
     # The test results are available
     results = page.locator('flt-semantics[aria-label*="Nguyễn Minh Đức"]')
-    assert results.count() > 0, "Phải tìm thấy sách của Nguyễn Minh Đức"
+    assert results.count() > 0, "We must find Nguyen Minh Duc's book."
 
     page.screenshot(path=f"{test_config['screenshot_dir']}/TC-07-search-author.png")
