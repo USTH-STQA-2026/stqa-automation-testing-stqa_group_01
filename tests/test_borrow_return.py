@@ -25,7 +25,7 @@ from conftest import (
 )
 
 
-def test_borrow_book(page, test_config):
+def test_borrow_book(page, test_config): # made by Nguyễn Xuân Dương
     """TC-08: Borrow an available book (*Mượn sách có trạng thái 'Có sẵn'*)
 
     🔴 NOT COMPLETED (*CHƯA HOÀN THÀNH*)
@@ -77,7 +77,7 @@ def test_borrow_book(page, test_config):
     # pytest.skip("Not implemented — student must complete (Chưa hoàn thành)")
 
 
-def test_view_borrowed_books(page, test_config):
+def test_view_borrowed_books(page, test_config): #made by Vũ Trần Nam Khánh
     """TC-09: View borrowed books list (*Xem danh sách sách đang mượn — tab Mượn / Trả*)
 
     🔴 NOT COMPLETED (*CHƯA HOÀN THÀNH*)
@@ -120,7 +120,7 @@ def test_view_borrowed_books(page, test_config):
     #pytest.skip("Not implemented — student must complete (Chưa hoàn thành)")
 
 
-def test_return_book(page, test_config):
+def test_return_book(page, test_config): # made by Nguyễn Xuân Dương
     """TC-10: Return a borrowed book (*Trả sách đang mượn*)
 
     🔴 NOT COMPLETED (*CHƯA HOÀN THÀNH*)
@@ -164,7 +164,7 @@ def test_return_book(page, test_config):
 
     #pytest.skip("Not implemented — student must complete (Chưa hoàn thành)")
 
-def test_book_limit(page, test_config):
+def test_book_limit(page, test_config): # made by Vũ Trần Nam Khánh
 
     page.goto(test_config["base_url"], wait_until="networkidle", timeout=60000)
     enable_flutter_semantics(page)
@@ -202,7 +202,7 @@ def test_book_limit(page, test_config):
 
     #pytest.skip("Not implemented — student must complete (Chưa hoàn thành)")
 
-def test_borrow_permission_expired(page, test_config):
+def test_borrow_permission_expired(page, test_config): # made by Nguyễn Xuân Dương
 
     page.goto(test_config["base_url"], wait_until="networkidle", timeout=60000)
     enable_flutter_semantics(page)
@@ -226,7 +226,7 @@ def test_borrow_permission_expired(page, test_config):
 
     #pytest.skip("Not implemented — student must complete (Chưa hoàn thành)")
 
-def test_librarian_view_borrow_overdue(page,test_config):
+def test_librarian_view_borrow_overdue(page,test_config): # made by Vũ Trần Nam Khánh
 
     '''
     This is another bonus TC for Group 3.
