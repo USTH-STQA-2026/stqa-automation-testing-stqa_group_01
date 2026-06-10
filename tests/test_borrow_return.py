@@ -161,10 +161,11 @@ def test_return_book(page, test_config): # made by Nguyễn Xuân Dương
 
 
 def test_book_limit(page, test_config): # made by Vũ Trần Nam Khánh
-    """TC-11: Checking borrowing limit
+    """TC-14: Checking borrowing limit
     
     Description:
-
+    We try to borrow books pass the limit defined in the SRS, which is 4 books
+    and see if the error message appears
     """
     # [R] Reachability: Access the website
     # Login as MEM003 due to no borrowed books in this account 
@@ -209,10 +210,11 @@ def test_book_limit(page, test_config): # made by Vũ Trần Nam Khánh
 
 
 def test_borrow_permission_expired(page, test_config): # made by Nguyễn Xuân Dương
-    """TC-12: Testing the borrow permission of an expired account
+    """TC-15: Testing the borrow permission of an expired account
     
     Description:
-
+    Log in using an expired account, then try to borrow a book.
+    We check if the error message appears and shows the correct announcement.
     """
     # [R] Reachability: Access the website
     # Login as the expired account MEM005
@@ -246,10 +248,11 @@ def test_borrow_permission_expired(page, test_config): # made by Nguyễn Xuân 
 
 
 def test_borrow_permission_suspended(page, test_config): # made by Nguyễn Xuân Dương
-    """TC-13: Testing the borrow permission of an expired account
+    """TC-16: Testing the borrow permission of an expired account
     
-    Description:
-
+    Description: 
+    Log in using an suspended account, then try to borrow a book.
+    We check if the error message appears and shows the correct announcement.
     """
     # [R] Reachability: Access the website
     # Login as the suspended account MEM004
@@ -283,7 +286,7 @@ def test_borrow_permission_suspended(page, test_config): # made by Nguyễn Xuâ
 
 
 def test_librarian_view_borrow_overdue(page,test_config): # made by Vũ Trần Nam Khánh
-    """TC-14: Testing librarian's check overdue function
+    """TC-17: Testing librarian's check overdue function
 
     Description:
     Since for librarian account, it possess some additional functions / features that a regular account cannot.
