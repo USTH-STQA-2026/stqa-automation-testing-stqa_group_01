@@ -55,3 +55,36 @@ The automated screenshots for each result have been generated and saved into the
 
 - `screenshots/TC-04_search_by_name.png`
 - `screenshots/TC-05_search_no_result.png`
+
+---
+
+# REPORT: Web UI Automation Testing
+---
+
+## 4. General Function Testing
+- **Module Tested**: Logout function and Language changing (`tests/test_general.py`)
+- **Tools**: Python + Playwright + pytest
+
+### 1.1 How it works
+
+- **UI Synchronization**: Since Flutter re-renders dynamically, using `enable_flutter_semantics(page)` after actions (logout/switch language) is compulsory. It refresh Semantics Tree so Playwright can see the updated elements, combined with implicit/explicit waits to ensure UI stability before assertions.
+- **Smart Waiting**: By using `flt-semantics[role="button"]:has-text("...")`, the tests locate elements by their visible text, which makes the script reliable and resistant to internal DOM structural changes.
+- **Validation Logic**: Logout used multi-point validation (for both Login button and Email input) to guarantee a complete return to the initial state. Language Change used a partial keyword match (any()) to verify the transition to English, so the test stays reliable even if only parts of the UI change.
+
+### 1.2 Test Cases Summary
+
+Every positive test ensures the UI transitions to the expected state and the displayed content is updated correctly without errors.
+
+| Test ID | Scenario | Description | Status |
+| --- | --- | --- | --- |
+| **TC-11** | Logout Success | Afer logging in, Logs out with dedicated button on the website. | PASS |
+| **TC-12** | Switch Language | Change language from Vietnamese to English with EN button | PASS |
+
+### 1.3 Test Evidence (Screenshots)
+
+The automated screenshots for each result have been generated and saved into the project folder when running the script:
+
+- `screenshots/logout_success.png`
+- `screenshots/language_en.png`
+
+---
