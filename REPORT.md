@@ -66,7 +66,9 @@ The automated screenshots for each result have been generated and saved into the
 **Module Tested:** Borrow and Return Functionality (`tests/test_borrow_return.py`)
 
 ### 3.1 How it works
-
+- **Flutter Web Support:** We used `enable_flutter_semantics(page)` so that Playwright can read the important book tabs, borrow box.
+- **Smart Waiting:** We used `wait_for_flutter(page, text="...")` so that Playwright can wait until our needed display text appears.
+- **Reading Book Tabs:** Each book tab has `role="tab"` and an `aria-label` containing its informations (IDs, title, author, category, borrow status, etc.) and these information then can be used by inspecting `aria-label` attributes of `flt-semantics` elements via `.all_text_contents()`. Sometimes there are informations that can be ignore by `flt-semantics` due to the html attributes, so we have to use .content() instead.
 ### 3.2 Test Cases Summary
 | Test ID | Scenario | Description | Status |
 |---|---|---|---|
