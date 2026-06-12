@@ -61,6 +61,7 @@ The automated screenshots for each result have been generated and saved into the
 - `screenshots/TC-07-search-author.png`
 
 ---
+
 ## 3. Borrow and Return books module
 **Module Tested:** Borrow and Return Functionality (`tests/test_borrow_return.py`)
 
@@ -69,6 +70,13 @@ The automated screenshots for each result have been generated and saved into the
 ### 3.2 Test Cases Summary
 | Test ID | Scenario | Description | Status |
 |---|---|---|---|
+|TC-08|Borrowing an available book|Log in as an active member → Click borrow on any available books → See successful borrow message|PASS|
+|TC-09|Viewing a borrowed book|Log in as an active member with a borrowed book → Change to tab "Mượn / Trả" → See the borrowed book|PASS|
+|TC-10|Returning a borrowed book|Log in as an active member with a borrowed book → Change to tab "Mượn / Trả" → Click return on the borrowed book → See successful return message|PASS|
+|TC-14|Testing the borrow limit|Log in as an active member with no borrowed book → Borrow 4 books → System stops user from borrowing the 4th book and show error message|FAIL|
+|TC-15|Testing borrow permission of an expired account|Log in as an expired member → Click borrow on any available books → See error message with correct reason|PASS|
+|TC-16|Testing borrow permission of an suspended account|Log in as an suspended member → Click borrow on any available books → See error message with correct reason|FAIL|
+|TC-17|Checking overdue books|Log in as the librarian → Change to tab "Mượn / Trả" → Click on "Kiểm tra sách quá hạn" → See overdue books|PASS|
 
 ### 3.3 Test Evidence (Screenshots)
 
