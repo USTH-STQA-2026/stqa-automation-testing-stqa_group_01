@@ -48,6 +48,8 @@ The automated screenshots for each result have been generated and saved into the
 |---|---|---|---|
 | TC-04 | Search by Book Name | Enters "Flutter" in the search box → at least one book card with "Flutter" in its `aria-label` is displayed, and the "Không tìm thấy sách" (no results) message does not appear. | PASS |
 | TC-05 | Search with No Result | Enters "Tiểu thuyết" (a keyword not in the seed data) → the system displays the "Không tìm thấy sách" message and no book cards are shown. | PASS |
+| TC-06 | Filter by Category | Enters "Công nghệ" in the category filter box → all displayed book cards have "Công nghệ" in their `aria-label`, confirming the filter correctly restricts results to the selected category. | PASS |
+| TC-07 | Search by Author | Enters author name "Nguyễn Minh Đức" in the search box → at least one book card with "Nguyễn Minh Đức" in its `aria-label` is displayed, confirming search works on author names as well as book titles. | PASS |
 
 ### 2.3 Test Evidence (Screenshots)
 
@@ -55,6 +57,8 @@ The automated screenshots for each result have been generated and saved into the
 
 - `screenshots/TC-04_search_by_name.png`
 - `screenshots/TC-05_search_no_result.png`
+- `screenshots/TC-06-filter-category.png`
+- `screenshots/TC-07-search-author.png`
 
 ---
 
