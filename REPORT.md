@@ -69,16 +69,17 @@ The automated screenshots for each result have been generated and saved into the
 - **Flutter Web Support:** We used `enable_flutter_semantics(page)` so that Playwright can read the important book tabs, borrow box.
 - **Smart Waiting:** We used `wait_for_flutter(page, text="...")` so that Playwright can wait until our needed display text appears.
 - **Reading Book Tabs:** Each book tab has `role="tab"` and an `aria-label` containing its informations (IDs, title, author, category, borrow status, etc.) and these information then can be used by inspecting `aria-label` attributes of `flt-semantics` elements via `.all_text_contents()`. Sometimes there are informations that can be ignored by `flt-semantics` due to the html attributes, so we have to use `.content()` instead.
+
 ### 3.2 Test Cases Summary
 | Test ID | Scenario | Description | Status |
 |---|---|---|---|
-|TC-08|Borrowing an available book|Log in as an active member → Click borrow on any available books → See successful borrow message|PASS|
-|TC-09|Viewing a borrowed book|Log in as an active member with a borrowed book → Change to tab "Mượn / Trả" → See the borrowed book|PASS|
-|TC-10|Returning a borrowed book|Log in as an active member with a borrowed book → Change to tab "Mượn / Trả" → Click return on the borrowed book → See successful return message|PASS|
-|TC-14|Testing the borrow limit|Log in as an active member with no borrowed book → Borrow 4 books → System stops user from borrowing the 4th book and show error message|FAIL|
-|TC-15|Testing borrow permission of an expired account|Log in as an expired member → Click borrow on any available books → See error message with correct reason|PASS|
-|TC-16|Testing borrow permission of an suspended account|Log in as an suspended member → Click borrow on any available books → See error message with correct reason|FAIL|
-|TC-17|Checking overdue books|Log in as the librarian → Change to tab "Mượn / Trả" → Click on "Kiểm tra sách quá hạn" → See overdue books|PASS|
+|**TC-08**|Borrowing an available book|Log in as an active member → Click borrow on any available books → See successful borrow message|PASS|
+|**TC-09**|Viewing a borrowed book|Log in as an active member with a borrowed book → Change to tab "Mượn / Trả" → See the borrowed book|PASS|
+|**TC-10**|Returning a borrowed book|Log in as an active member with a borrowed book → Change to tab "Mượn / Trả" → Click return on the borrowed book → See successful return message|PASS|
+|**TC-14**|Testing the borrow limit|Log in as an active member with no borrowed book → Borrow 4 books → System stops user from borrowing the 4th book and show error message|FAIL|
+|**TC-15**|Testing borrow permission of an expired account|Log in as an expired member → Click borrow on any available books → See error message with correct reason|PASS|
+|**TC-16**|Testing borrow permission of an suspended account|Log in as an suspended member → Click borrow on any available books → See error message with correct reason|FAIL|
+|**TC-17**|Checking overdue books|Log in as the librarian → Change to tab "Mượn / Trả" → Click on "Kiểm tra sách quá hạn" → See overdue books|PASS|
 
 ### 3.3 Test Evidence (Screenshots)
 
@@ -95,7 +96,6 @@ The automated screenshots for each result have been generated and saved into the
 - `screenshots/borrow_number_3.png`
 - `screenshots/borrow_number_4.png`
 - `screenshots/librarian_view_borrow_overdue.png`
-- `screenshots/login_success.png`
 - `screenshots/view_borrowed_books.png`
 
 ---
