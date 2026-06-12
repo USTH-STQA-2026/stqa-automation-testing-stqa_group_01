@@ -1,9 +1,9 @@
 # REPORT: Web UI Automation Testing
 ---
+**Tools**: Python + Playwright + pytest
 
 ## 1. Login Module
 - **Module Tested**: Login Functionality (`tests/test_login.py`)
-- **Tools**: Python + Playwright + pytest
 
 ### 1.1 How it works
 
@@ -33,3 +33,25 @@ The automated screenshots for each result have been generated and saved into the
 ---
 
 ## 2. Searching and Filtering books module
+**Module Tested:** Search and Filter Functionality (`tests/test_search_filter.py`)
+
+### 2.1 How it works
+
+- **Flutter Web Support:** As with the login module, `enable_flutter_semantics(page)` is used so Playwright can read the search box, filter box, and book cards rendered on the Flutter canvas.
+- **RIPR Model:** Each test case follows Reachability → Infection → Propagation → Revealability: log in to reach the book list, type a keyword to trigger the search/filter logic, wait for the UI to update, then assert the result is correct.
+- **Smart Waiting:** `wait_for_flutter(page, selector=...)` or `wait_for_flutter(page, text=...)` ensures the test waits until the search results actually render before checking them, avoiding flaky false failures.
+- **Reading Book Cards:** Each book card has `role="group"` and an `aria-label` containing its info (code, title, author, category), so results are verified by inspecting `aria-label` attributes of `flt-semantics` elements.
+
+### 2.2 Test Cases Summary
+
+| Test ID | Scenario | Description | Status |
+|---|---|---|---|
+| TC-04 | Search by Book Name | Enters "Flutter" in the search box → at least one book card with "Flutter" in its `aria-label` is displayed, and the "Không tìm thấy sách" (no results) message does not appear. | PASS |
+| TC-05 | Search with No Result | Enters "Tiểu thuyết" (a keyword not in the seed data) → the system displays the "Không tìm thấy sách" message and no book cards are shown. | PASS |
+
+### 2.3 Test Evidence (Screenshots)
+
+The automated screenshots for each result have been generated and saved into the project folder when running the script:
+
+- `screenshots/TC-04_search_by_name.png`
+- `screenshots/TC-05_search_no_result.png`
