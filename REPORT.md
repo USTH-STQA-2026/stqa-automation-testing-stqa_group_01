@@ -61,7 +61,34 @@ The automated screenshots for each result have been generated and saved into the
 - `screenshots/TC-07-search-author.png`
 
 ---
+## 3. Borrow and Return books module
+**Module Tested:** Borrow and Return Functionality (`tests/test_borrow_return.py`)
 
+### 3.1 How it works
+
+### 3.2 Test Cases Summary
+| Test ID | Scenario | Description | Status |
+|---|---|---|---|
+
+### 3.3 Test Evidence (Screenshots)
+
+The automated screenshots for each result have been generated and saved into the project folder when running the script:
+
+- `screenshots/after_borrow.png`
+- `screenshots/after_return.png`
+- `screenshots/before_borrow.png`
+- `screenshots/before_return.png`
+- `screenshots/borrow_from_expired_acc.png`
+- `screenshots/borrow_from_suspended_acc.png`
+- `screenshots/borrow_number_1.png`
+- `screenshots/borrow_number_2.png`
+- `screenshots/borrow_number_3.png`
+- `screenshots/borrow_number_4.png`
+- `screenshots/librarian_view_borrow_overdue.png`
+- `screenshots/login_success.png`
+- `screenshots/view_borrowed_books.png`
+
+---
 
 ## 4. General Function Testing
 - **Module Tested**: Logout function and Language changing (`tests/test_general.py`)
